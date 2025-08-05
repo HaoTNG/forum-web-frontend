@@ -1,21 +1,36 @@
 import { useState } from "react";
 import { registerUser } from "../services/auth";
+import {useNavigate} from "react-router-dom";
 
 const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             await registerUser(email, password, name, username);
-            alert("Registration successful!");
-        } catch (error) {
-            alert("Registration failed", error.message);
+            setSuccess(true);
+        } catch {
+            alert("Registration failed");
         }
     };
+    if(success) {
+        return (
+            <div className="text-center mt-10">
+                <h2 className="text-2xl font-bold text-green-600 mb-4">Registration successfully</h2>
+                <p className="mb-4">Please login to continue</p>
+                <button
+                onClick={()=>navigate("/login")}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-950">
+                    Go to Login Page
+                </button>
+            </div>
+        )
+    }
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">

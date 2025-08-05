@@ -1,19 +1,29 @@
 import {loginUser} from "../services/auth.ts";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const Login = () =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try{
             const data = await loginUser(email, password);
-            localStorage.setItem("token", data.token );
-            alert("Login successfully");
+            localStorage.setItem("accessToken", data.accessToken);
+            localStorage.setItem("refreshToken", data.refreshToken);
+            window.location.href = "/";
         }catch{
             alert("login failed");
         }
+    }
+
+    if(success){
+
+
+
     }
     return(
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded">

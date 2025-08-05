@@ -10,3 +10,24 @@ export const registerUser = async (email: string, password: string, name: string
     return res.data;
 }
 
+export const logoutUser = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (!refreshToken) {
+        console.warn("No refresh token found");
+        localStorage.removeItem("accessToken");
+        window.location.href = "/login";
+        return;
+    }
+
+    try {
+        await api.post("/auth/logout", { refreshToken });
+    } catch (error) {
+        console.error("Logout API error:", error);
+    } finally {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+    }
+};
+
