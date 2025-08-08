@@ -6,7 +6,9 @@ interface Post {
     _id: string;
     title: string;
     content: string;
-    author: {username: string};
+    author: {
+        _id: string;
+        username: string};
 }
 const Home = () => {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -22,14 +24,19 @@ const Home = () => {
 
     return (
         <div>
+            <div>
+                <Link to="/create"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-900"
+                >Create Post</Link>
+            </div>
             <h2 className="text-2xl font-bold mb-4">Latest Posts</h2>
-            <div className="space-y-4">
+            <div className="space-y-4 justify-between">
                 {posts.map((post)=>(
                     <div key={post._id} className="p-4 border rounded shadow">
                         <h3 className="text-xl font-semibold">{post.title}</h3>
                         <p className="text-gray-600">{post.content.substring(0,100)}</p>
                         <p className="text-sm text-gray-400">
-                            By {post.author}
+                            By {post.author.username}
                         </p>
                         <Link
                         to={`/post/${post._id}`}>

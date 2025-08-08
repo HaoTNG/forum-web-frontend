@@ -14,6 +14,8 @@ const Login = () =>{
             const data = await loginUser(email, password);
             localStorage.setItem("accessToken", data.accessToken);
             localStorage.setItem("refreshToken", data.refreshToken);
+            localStorage.setItem("username", data.user.username);
+            localStorage.setItem("userid", data.user.id);
             window.location.href = "/";
         }catch{
             alert("login failed");

@@ -1,4 +1,5 @@
 import api from "./api";
+import {clearTokens} from "./tokenMangaer.ts";
 
 export const loginUser = async (email: string, password: string) =>{
     const res = await api.post("/auth/login", {email, password});
@@ -25,8 +26,7 @@ export const logoutUser = async () => {
     } catch (error) {
         console.error("Logout API error:", error);
     } finally {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        clearTokens();
         window.location.href = "/login";
     }
 };
