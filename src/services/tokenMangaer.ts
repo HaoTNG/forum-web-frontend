@@ -18,3 +18,7 @@ export const clearTokens = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
 };
+
+export const getUserRole = () => {
+    localStorage.getItem("role");
+}

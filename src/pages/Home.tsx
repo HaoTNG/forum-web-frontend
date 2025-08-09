@@ -31,16 +31,22 @@ const Home = () => {
             </div>
             <h2 className="text-2xl font-bold mb-4">Latest Posts</h2>
             <div className="space-y-4 justify-between">
-                {posts.map((post)=>(
-                    <div key={post._id} className="p-4 border rounded shadow">
+                {posts.map((post) => (
+                    <div key={post._id} className="p-4 border rounded shadow hover:shadow-md transition-shadow">
                         <h3 className="text-xl font-semibold">{post.title}</h3>
-                        <p className="text-gray-600">{post.content.substring(0,100)}</p>
-                        <p className="text-sm text-gray-400">
-                            By {post.author.username}
+                        <p className="text-gray-600">{post.content.substring(0, 100)}...</p>
+
+                        <p className="text-sm text-gray-400 mt-1">
+                            {post.author
+                                ? `By ${post.author?.username}`
+                                : "By deleted account"}
                         </p>
+
                         <Link
-                        to={`/post/${post._id}`}>
-                            Read more
+                            to={`/post/${post._id}`}
+                            className="inline-block mt-3 text-blue-500 hover:underline"
+                        >
+                            Read more →
                         </Link>
                     </div>
                 ))}

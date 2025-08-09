@@ -1,45 +1,58 @@
-import React, {useState, useEffect} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
-import {getPostById, updatePost} from "../services/post.ts";
+import { useEffect, useState } from "react";
+import { getPostById, updatePost } from "../services/post";
+import { useParams, useNavigate } from "react-router-dom";
 
-export default function EditPost(){
-    const{id} = useParams();
+export default function EditPost() {
+    const { id } = useParams();
     const navigate = useNavigate();
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+
 
     useEffect(() => {
-        getPostById(id).then((res)=>{
-            setTitle(res.data.title);
-            setContent(res.data.content);
-        })
+        if (!id) return;
+        getPostById(id)
+            .then((post) => {
+                setTitle(post.title);
+                setContent(post.content);
+            })
+            .catch(console.error);
     }, [id]);
 
-    const handleSubmit = async (e: React.FormEvent)=>{
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try{
-            await updatePost(id, {title, content});
-            alert("Post updated successfully")
-            navigate(`/post/${id}`);
-        }catch(error){
-            alert(`error updating post: ${error.message}`)
-        }
-    }
+        await updatePost(id!, { title, content });
+        navigate(`/post/${id}`);
+    };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 flex flex-col gap 4">
-            <h2 className="text-2xl font-bold">Edit Post</h2>
+        <form
+            onSubmit={handleSubmit}
+            className="max-w-md mx-auto mt-10 flex flex-col gap-4"
+        >
+            <h2 className="text-2xl font-bold mb-4">Edit Post</h2>
+
+            <label className="font-semibold">Title</label>
             <input
-                className="border p-2"
+                className="border p-2 rounded"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}/>
+                onChange={(e) => setTitle(e.target.value)}
+            />
+
+            <label className="font-semibold">Content</label>
             <textarea
-                className="border p-2"
+                className="border p-2 rounded h-40 resize-none"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}/>
-            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+                onChange={(e) => setContent(e.target.value)}
+            />
+
+            <button
+                type="submit"
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            >
                 Save Changes
             </button>
         </form>
-    )
+    );
 }

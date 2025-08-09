@@ -146,12 +146,15 @@ const PostDetail = () => {
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-gray-800">{comment.author.username}</span>
+                                    <span className="font-semibold text-gray-800">
+                                        {comment.author
+                                            ? `${comment.author?.username}`
+                                        : "By deleted account"}</span>
                                     <span className="text-xs text-gray-500">
               {new Date(comment.createdAt).toLocaleDateString()}
             </span>
                                 </div>
-                                {localStorage.getItem("userid")?.toString() === comment.author._id.toString() && (
+                                {localStorage.getItem("userid")?.toString() === comment.author?._id.toString() && (
                                     <button
                                         onClick={() => handleDeleteComment(comment._id)}
                                         className="text-red-500 hover:text-red-700 text-sm font-medium border p-1"
