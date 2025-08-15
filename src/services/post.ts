@@ -12,11 +12,11 @@ export const getPostById = async (id: string) => {
     return res.data;
 }
 
-export const createPost = async (data: { title: string; content: string; author: string | null }) => {
+export const createPost = async (data: { title: string; content: string; topic: string  }) => {
     return api.post("/post", data);
 };
 
-export const updatePost = async (id: string, data: {title: string; content: string}) =>{
+export const updatePost = async (id: string, data: {title: string; content: string; topic: string}) =>{
     return api.put(`/post/${id}`, data)
 };
 
@@ -32,3 +32,13 @@ export const dislikePost = async (id: string) => {
     const res = await api.put(`/post/${id}/dislike`);
     return res.data;
 }
+export const deletePostByMod = async (id: string) => {
+    const res = await api.delete(`/mod/${id}`);
+    return res.data;
+}
+
+export const searchPost = async (query: string) => {
+    const encodedQuery = encodeURIComponent(query.trim());
+    const res = await api.get(`/search?q=${encodedQuery}`);
+    return res.data;
+};

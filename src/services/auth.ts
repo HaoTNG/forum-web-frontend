@@ -1,5 +1,5 @@
 import api from "./api";
-import {clearTokens} from "./tokenMangaer.ts";
+import {clearTokens} from "./tokenManager.ts";
 
 export const loginUser = async (email: string, password: string) =>{
     const res = await api.post("/auth/login", {email, password});

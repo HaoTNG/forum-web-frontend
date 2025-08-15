@@ -8,6 +8,7 @@ import CreatePost from "../pages/PostCreate.tsx";
 import EditPost from "../pages/EditPost";
 import ProfilePage from "../pages/ProfilePage";
 import UserManagement from "../pages/UserManagement.tsx";
+import SearchResults from "../pages/SearchResults.tsx";
 const AppRoutes = () => {
     return (
         <Router>
@@ -21,6 +22,7 @@ const AppRoutes = () => {
                     <Route path="edit/:id" element={<EditPost/>}/>
                     <Route path="user/me" element={<ProfilePage/>}/>
                     <Route path="modandadmin" element={<UserManagement/>}/>
+                    <Route path="search" element={<SearchResults />}/>
                 </Route>
             </Routes>
         </Router>

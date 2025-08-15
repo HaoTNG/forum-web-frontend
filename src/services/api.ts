@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { getAccessToken, getRefreshToken, setTokens, clearTokens } from "./tokenMangaer.ts";
+import { getAccessToken, getRefreshToken, setTokens, clearTokens } from "./tokenManager.ts";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,

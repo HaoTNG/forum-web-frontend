@@ -56,7 +56,7 @@ export default function ProfilePage() {
     if (!user) return <p>Loading..</p>;
 
     return (
-        <div className="max-w-md mx-auto p-4 border rounded shadow">
+        <div className="max-w-md mx-auto p-4 border rounded shadow bg-white">
             <h1 className="text-2xl font-bold mb-4">Your profile</h1>
 
             <form onSubmit={handleUpdate} className="space-y-3">
