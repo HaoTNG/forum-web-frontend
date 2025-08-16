@@ -11,6 +11,14 @@ export interface IUser {
     refreshToken: string | null;
 }
 
+export interface Contributor {
+    _id: string;
+    username: string;
+    postCount: number;
+    commentCount: number;
+    score: number;
+}
+
 export const getMe = async () => {
     const res = await api.get("/user/me");
     return res.data;
@@ -45,3 +53,8 @@ export const updateUserRole = async (id: string, role: string) => {
     const res = await api.patch(`/admin/${id}/role`, { role });
     return res.data;
 };
+
+export const getTopContributors = async () => {
+    const res = await api.get("/user/top-contributors");
+    return res.data;
+}

@@ -1,6 +1,14 @@
 import api from "./api"
 
-
+export interface Post {
+    _id: string;
+    title: string;
+    content: string;
+    author: {
+        _id: string;
+        username: string;
+    };
+}
 
 export const getPosts = async () => {
     const res = await api.get("/post");

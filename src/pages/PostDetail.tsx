@@ -184,7 +184,7 @@ const PostDetail = () => {
         }
     };
 
-    /** Reply to comment */
+
     const handleReply = async (parentId: string, content: string) => {
         try {
             const reply = await createComment(content, id!, parentId);
@@ -194,7 +194,7 @@ const PostDetail = () => {
         }
     };
 
-    /** Like / Dislike */
+
     const handleLike = async () => {
         if (!post) return;
         await likePost(post._id);
@@ -206,7 +206,7 @@ const PostDetail = () => {
         setPost(await getPostById(post._id));
     };
 
-    /** Add new comment */
+
     const handleComment = async () => {
         if (!newComment.trim() || !id) return;
         const comment = await createComment(newComment, id, null);
@@ -214,7 +214,7 @@ const PostDetail = () => {
         setNewComment("");
     };
 
-    /** Deleted post view */
+
     if (isDeleted) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[300px]">
@@ -230,7 +230,7 @@ const PostDetail = () => {
         );
     }
 
-    /** Loading state */
+
     if (!post) {
         return <div className="text-center mt-10 text-gray-600">Loading...</div>;
     }
@@ -250,7 +250,7 @@ const PostDetail = () => {
                 </button>
             )}
 
-            {/* Author control */}
+
             {String(post.author?._id) === currentUserId && (
                 <div className="mt-4 flex gap-3">
                     <Link to={`/edit/${post._id}`} className="text-blue-500 hover:underline">
@@ -268,12 +268,12 @@ const PostDetail = () => {
                 </div>
             )}
 
-            {/* Post content */}
+
             <h1 className="text-3xl font-bold mt-3">{post.title}</h1>
             <p className="text-gray-600 mb-4">By {post.author?.username}</p>
             <p className="leading-relaxed">{post.content}</p>
 
-            {/* Like / Dislike */}
+
             <div className="flex gap-4 mt-4">
                 <button
                     onClick={handleLike}
@@ -306,7 +306,7 @@ const PostDetail = () => {
                 </button>
             </div>
 
-            {/* Comment list */}
+
             <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-4">Comments</h2>
                 {comments.length === 0 ? (
@@ -325,7 +325,7 @@ const PostDetail = () => {
                 )}
             </div>
 
-            {/* Toast */}
+
             {toast && (
                 <div
                     className={`fixed bottom-5 right-5 px-5 py-3 rounded-xl shadow-lg text-white transition-all ${

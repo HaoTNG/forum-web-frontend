@@ -1,19 +1,44 @@
 import { useEffect, useState } from "react";
 import { getPosts } from "../services/post.ts";
 import { Link } from "react-router-dom";
-
-interface Post {
-    _id: string;
-    title: string;
-    content: string;
-    author: {
-        _id: string;
-        username: string;
-    };
-}
+import type {Post} from "../services/post.ts";
+import {type Contributor, getTopContributors} from "../services/user.ts";
 
 const Home = () => {
     const [posts, setPosts] = useState<Post[]>([]);
+
+const TopContributors = () => {
+        const [contributors, setContributors] = useState<Contributor[]>([]);
+
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    const data = await getTopContributors();
+                    setContributors(data);
+                } catch (err) {
+                    console.error(err);
+                }
+            };
+            fetchData();
+        }, []);
+
+        return (
+            <ul className="space-y-2">
+                {contributors.map((c, index) => (
+                    <li
+                        key={c._id}
+                        className="flex justify-between items-center p-2 border rounded hover:bg-gray-50 transition"
+                    >
+                        <span className="font-semibold">{index + 1}. {c.username}</span>
+                        <span className="text-gray-500 text-sm">
+                        Posts: {c.postCount} | Comments: {c.commentCount} | Score: {c.score}
+                    </span>
+                    </li>
+                ))}
+            </ul>
+        );
+    };
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -120,10 +145,9 @@ const Home = () => {
 
                 {/* Right Column (20%) */}
                 <div className="col-span-2 space-y-6">
-                    {/* Top Contributors */}
                     <div className="bg-white p-6 rounded-lg shadow">
                         <h2 className="text-xl font-semibold mb-4">Top Contributors</h2>
-                        {/* List users here */}
+                        <TopContributors />
                     </div>
 
                     {/* Some stats */}
@@ -132,6 +156,7 @@ const Home = () => {
                         {/* Numbers here */}
                     </div>
                 </div>
+
             </section>
 
 
