@@ -96,7 +96,7 @@ const Navbar = () => {
                     ) : (
                         <span className="flex items-center ">
                             <Link
-                                to="/user/me"
+                                to="/user"
                                 className="px-4 py-2 rounded-md  hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
                             >
                                 Profile

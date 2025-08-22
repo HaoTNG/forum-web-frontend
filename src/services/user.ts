@@ -5,11 +5,17 @@ export interface IUser {
     username: string;
     email: string;
     name?: string;
+    avatarUrl: string;
     role: 'user' | 'moderator' | 'admin';
+    description: string;
     createdAt: string;
     updatedAt: string;
     refreshToken: string | null;
+    posts: string[];      
+    comments: string[];   
+    score: number;
 }
+
 
 export interface Contributor {
     _id: string;
