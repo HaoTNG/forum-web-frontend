@@ -1,14 +1,11 @@
 import api from "./api.ts";
-
+import type { IUser } from "./user.ts";
 
 export interface Comment {
     _id: string;
     content: string;
     postId: string;
-    author: {
-        _id: string;
-        username: string;
-    };
+    author: IUser;
     createdAt: string;
     parent?: string | null;
     replies?: Comment[];

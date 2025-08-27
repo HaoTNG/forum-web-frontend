@@ -8,6 +8,9 @@ export interface Post {
         _id: string;
         username: string;
     };
+    likes: string[];
+    dislikes: string[];
+    images: string[];
 }
 
 export const getPosts = async () => {
@@ -20,13 +23,45 @@ export const getPostById = async (id: string) => {
     return res.data;
 }
 
-export const createPost = async (data: { title: string; content: string; topic: string  }) => {
-    return api.post("/post", data);
+export const createPost = async (
+  data: { title: string; content: string; topic: string; images?: File[] }
+) => {
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("content", data.content);
+  formData.append("topic", data.topic);
+
+  if (data.images) {
+    data.images.forEach((file) => {
+      formData.append("images", file);
+    });
+  }
+
+  return api.post("/post", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
 
-export const updatePost = async (id: string, data: {title: string; content: string; topic: string}) =>{
-    return api.put(`/post/${id}`, data)
+export const updatePost = async (
+  id: string,
+  data: { title: string; content: string; topic: string; images?: File[] }
+) => {
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("content", data.content);
+  formData.append("topic", data.topic);
+
+  if (data.images) {
+    data.images.forEach((file) => {
+      formData.append("images", file);
+    });
+  }
+
+  return api.put(`/post/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
+
 
 export const deletePost = async (id: string) => {
     return api.delete(`/post/${id}`);
@@ -50,3 +85,8 @@ export const searchPost = async (query: string) => {
     const res = await api.get(`/search?q=${encodedQuery}`);
     return res.data;
 };
+
+export const getPostByUser = async (id: string) =>{
+    const res = await api.get(`/post/user/${id}`);
+    return res.data;
+}

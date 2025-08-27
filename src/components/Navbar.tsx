@@ -1,28 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAuth } from "../components/AuthContext";
 
 const Navbar = () => {
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [role, setRole] = useState<string | null>(null);
+    const { user } = useAuth(); // lấy user từ context
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        const storedRole = localStorage.getItem("role");
-        setLoggedIn(!!token);
-        setRole(storedRole);
-
-        const handleStorageChange = () => {
-            const token = localStorage.getItem("accessToken");
-            const storedRole = localStorage.getItem("role");
-            setLoggedIn(!!token);
-            setRole(storedRole);
-        };
-        window.addEventListener("storage", handleStorageChange);
-        return () => window.removeEventListener("storage", handleStorageChange);
-    }, []);
 
     const handleLogout = () => {
         logoutUser();
@@ -37,15 +21,15 @@ const Navbar = () => {
         }
     };
 
+    const loggedIn = !!user;
+    const role = user?.role;
+
     return (
         <nav className="sticky top-0 z-50 bg-[#122640] text-white p-2.5 shadow-md ">
             <div className=" flex justify-around items-center">
                 <Link to="/" className="flex items-center text-base sm:text-lg md:text-xl lg:text-2xl font-bold">
-
                     <span>Zforum</span>
                 </Link>
-
-
 
                 <form onSubmit={handleSearchSubmit} className="flex items-center w-full max-w-[800px]">
                     <input
@@ -65,12 +49,13 @@ const Navbar = () => {
                     </button>
                 </form>
 
-
                 <div className="flex items-center">
                     <Link to="/" className="px-4 py-2 rounded-md h-full hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg">
                         Home
                     </Link>
-                    {loggedIn && (
+
+                    {/* chỉ hiện khi user có role phù hợp */}
+                    {loggedIn  && (
                         <Link
                             to="/modandadmin"
                             className="px-4 py-2 rounded-md  hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
@@ -78,6 +63,7 @@ const Navbar = () => {
                             Management
                         </Link>
                     )}
+
                     {!loggedIn ? (
                         <>
                             <Link
@@ -96,7 +82,7 @@ const Navbar = () => {
                     ) : (
                         <span className="flex items-center ">
                             <Link
-                                to="/user"
+                                to="/user/me"
                                 className="px-4 py-2 rounded-md  hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
                             >
                                 Profile

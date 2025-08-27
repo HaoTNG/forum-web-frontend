@@ -12,11 +12,6 @@ const Login = () =>{
         e.preventDefault();
         try{
             const data = await loginUser(email, password);
-            localStorage.setItem("accessToken", data.accessToken);
-            localStorage.setItem("refreshToken", data.refreshToken);
-            localStorage.setItem("username", data.user.username);
-            localStorage.setItem("userid", data.user.id);
-            localStorage.setItem("role", data.user.role);
             window.location.href = "/";
         }catch{
             alert("login failed");

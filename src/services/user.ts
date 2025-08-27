@@ -64,3 +64,36 @@ export const getTopContributors = async () => {
     const res = await api.get("/user/top-contributors");
     return res.data;
 }
+
+export const uploadAvatar = async (userId: string, file: File) =>{
+  try {
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const res = await api.post(`/user/avatar/${userId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true, 
+    });
+
+    return res.data;
+  } catch (error: any) {
+    throw error.response?.data || { message: "Upload avatar failed" };
+  }
+};
+
+export const checkUsernameAvailable = async (username: string): Promise<boolean> => {
+  if (!username.trim()) return false;
+
+  try {
+    const res = await api.get(`/user/check-username`, {
+      params: { username }
+    });
+    
+    return res.data?.available ?? false;
+  } catch (err) {
+    console.error("Check username failed:", err);
+    return false;
+  }
+};

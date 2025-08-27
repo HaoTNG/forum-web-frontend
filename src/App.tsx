@@ -1,11 +1,17 @@
 import './App.css'
-import AppRoutes from "./routes/AppRoutes.tsx";
+import React from "react";
 
+import AppRoutes from "./routes/AppRoutes.tsx";
+import { AuthProvider } from "./components/AuthContext";
 function App() {
 
 
   return (
-    <AppRoutes/>
+  <React.StrictMode>
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  </React.StrictMode>
 
   )
 }

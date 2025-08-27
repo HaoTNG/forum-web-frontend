@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getAllUsers, deleteUser, updateUserRole, type IUser } from "../services/user.ts";
 import { Link } from "react-router-dom";
+import { useAuth } from "../components/AuthContext.tsx";
 
-const getUserRole = () => localStorage.getItem("role");
 
 interface ModalProps {
     message: string;
@@ -42,7 +42,9 @@ function Modal({ message, onConfirm, onClose, confirmText = "OK", cancelText = "
 export default function UserManagement() {
     const [users, setUsers] = useState<IUser[]>([]);
     const [modal, setModal] = useState<React.ReactNode | null>(null);
-    const role = getUserRole();
+    const { user } = useAuth();
+    const role = user?.role;
+
 
     const fetchUsers = async () => {
         const data = await getAllUsers();
