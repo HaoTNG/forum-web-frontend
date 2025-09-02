@@ -27,25 +27,22 @@ const Avatar = ({ name, imageUrl }: { name?: string; imageUrl?: string | null })
       <img
         src={imageUrl}
         alt={name}
-        className="h-9 w-9 rounded-full object-cover"
+        className="h-10 w-10 rounded-full object-cover border border-gray-700"
       />
     );
   }
   const initial = (name?.trim()?.[0] || "?").toUpperCase();
   return (
-    <div className="h-9 w-9 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-gray-700">
+    <div className="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-300">
       {initial}
     </div>
   );
 };
 
-
-
-
 const ActionButton = ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
   <button
     onClick={onClick}
-    className="px-3 py-1 rounded-full hover:bg-gray-100 text-sm text-gray-600"
+    className="px-3 py-1.5 rounded-full hover:bg-gray-700 text-sm text-gray-400 transition-colors"
   >
     {children}
   </button>
@@ -91,7 +88,6 @@ const CommentItem = ({
 
     let targetId = comment._id;
     if (level >= 3) {
-      // reply level >=3 → gắn vào parent của comment hiện tại (cùng cấp)
       targetId = parentId || comment._id;
     }
 
@@ -101,35 +97,36 @@ const CommentItem = ({
   };
 
   return (
-    <div className="flex gap-3 mb-4">
-      <Avatar
-        name={comment.author?.username}
-        imageUrl={comment.author?.avatarUrl}
-      />
-
+    <div className="flex gap-3 mb-4 ">
+      <Avatar name={comment.author?.username} imageUrl={comment.author?.avatarUrl} />
       <div className="flex-1">
-        <div className="inline-block bg-gray-100 rounded-2xl px-3 py-2">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-800">{authorName}</span>
-            <span className="text-xs text-gray-500">
-              {new Date(comment.createdAt).toLocaleString()}
-            </span>
-          </div>
-          <p className="mt-1 text-gray-800">{comment.content}</p>
-        </div>
+        <div className="inline-block bg-gray-800 rounded-2xl px-4 py-3 max-w-full break-words" style={{ overflowWrap: "anywhere" }}>
+  <div className="flex items-center gap-2">
+    <span className="font-semibold text-gray-200">{authorName}</span>
+    <span className="text-xs text-gray-500">
+      {new Date(comment.createdAt).toLocaleString()}
+    </span>
+  </div>
+  <p className="mt-1 text-gray-300 break-words whitespace-pre-wrap" style={{ overflowWrap: "anywhere" }}>
+    {comment.content}
+  </p>
+</div>
 
-        <div className="mt-1 flex items-center gap-1">
+
+        <div className="mt-2 flex items-center gap-2">
           <ActionButton onClick={() => openReplyBox(`@${authorName} `)}>Reply</ActionButton>
           {currentUserId === comment.author?._id && (
             <ActionButton onClick={() => onDelete(comment._id, "comment")}>Delete</ActionButton>
           )}
           {(role === "admin" || role === "moderator") && currentUserId !== comment.author?._id && (
-            <ActionButton onClick={() => onDelete(comment._id, "modComment")}>Delete by mod</ActionButton>
+            <ActionButton onClick={() => onDelete(comment._id, "modComment")}>
+              Delete by mod
+            </ActionButton>
           )}
         </div>
 
         {comment.replies?.length > 0 && (
-          <div className="mt-2 ml-10 space-y-2">
+          <div className="mt-3 ml-10 space-y-3">
             {comment.replies?.map((r) => (
               <CommentItem
                 key={r._id}
@@ -152,13 +149,13 @@ const CommentItem = ({
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               rows={2}
-              className="w-full border rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-colors"
               placeholder={`Reply to ${authorName}...`}
             />
             <div className="mt-2 flex gap-2">
               <button
                 onClick={handleSubmitReply}
-                className="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-blue-600"
+                className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-blue-700 transition-colors"
               >
                 Submit
               </button>
@@ -167,7 +164,7 @@ const CommentItem = ({
                   setShowReplyBox(false);
                   setReplyText("");
                 }}
-                className="px-4 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100"
+                className="px-4 py-1.5 rounded-lg text-sm text-gray-400 hover:bg-gray-700 transition-colors"
               >
                 Cancel
               </button>
@@ -285,12 +282,12 @@ const PostDetail = () => {
 
   if (isDeleted) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[300px]">
+      <div className="flex flex-col items-center justify-center min-h-[300px] bg-gray-900 text-gray-200">
         <h2 className="text-2xl font-bold mb-2">This post has been deleted.</h2>
-        <p className="text-gray-600 mb-4">It is no longer available.</p>
+        <p className="text-gray-400 mb-4">It is no longer available.</p>
         <button
           onClick={() => navigate("/")}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           Go to Home
         </button>
@@ -298,16 +295,16 @@ const PostDetail = () => {
     );
   }
 
-  if (!post) return <div className="text-center mt-10 text-gray-600">Loading...</div>;
+  if (!post) return <div className="text-center mt-10 text-gray-400">Loading...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto mt-6">
-      <div className="bg-white p-5 rounded-2xl shadow border border-gray-200">
+    <div className="max-w-[1200px] mx-auto mt-6 px-4">
+      <div className="bg-gray-900 p-6 rounded-2xl shadow-lg border border-gray-800">
         {/* Admin/Mod */}
         {(role === "admin" || role === "moderator") && (
           <button
             onClick={() => requestDeletePost(true)}
-            className="text-red-600 hover:text-red-800 text-sm font-medium border px-2 py-1 rounded-md mb-3"
+            className="text-red-400 hover:text-red-300 text-sm font-medium border border-red-700 px-3 py-1.5 rounded-md mb-4 transition-colors"
           >
             ✕ Delete post by mod
           </button>
@@ -316,48 +313,60 @@ const PostDetail = () => {
         {/* Owner */}
         {String(post.author?._id) === currentUserId && (
           <div className="mt-1 flex gap-3 text-sm">
-            <Link to={`/edit/${post._id}`} className="text-blue-600 hover:underline font-medium">
+            <Link to={`/edit/${post._id}`} className="text-blue-400 hover:text-blue-300 font-medium">
               ✏️ Edit
             </Link>
             <button
-              className="text-red-600 hover:underline font-medium"
+              className="text-red-400 hover:text-red-300 font-medium"
               onClick={() => requestDeletePost(false)}
             >
               🗑 Delete
             </button>
           </div>
         )}
-
-        <h1 className="text-3xl font-bold mt-2">{post.title}</h1>
-        <p className="text-gray-600 mb-3">By {post.author?.username}</p>
-        <p className="leading-relaxed text-gray-800 whitespace-pre-line">{post.content}</p>
+        <Link to={`/user/${post.author._id}`} className="flex items-center gap-2 hover:underline">
+          <img
+            src={post.author.avatarUrl || "/default-avatar.png"}
+            alt={post.author.username}
+            className="w-8 h-8 rounded-full object-cover border border-gray-700"
+          />
+          <span className="font-medium text-gray-200">{post.author.username}</span>
+        </Link>
+        <h1 className="text-3xl font-bold mt-3 break-words text-gray-100">{post.title}</h1>
+        <p className="leading-relaxed text-[17px] text-gray-300 whitespace-pre-line break-words mt-3">
+          {post.content}
+        </p>
 
         {post.images && post.images.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
-            {post.images.map((img, idx) => (
-              <img
-                key={idx}
-                src={img}
-                alt={`post-${idx}`}
-                className="w-full h-60 object-cover rounded-xl"
-              />
-            ))}
-          </div>
-        )}
+  <div className="mt-4 flex flex-col gap-4">
+    {post.images.map((img, idx) => (
+      <a href={img} target="_blank" rel="noopener noreferrer">
+  <img
+    src={img}
+    alt={`post-${idx}`}
+    className="w-full h-auto object-contain rounded-xl shadow-sm cursor-pointer"
+  />
+</a>
+
+    ))}
+  </div>
+)}
+
+
 
         {/* Reactions */}
-        <div className="mt-4 flex items-center gap-4 text-[15px]">
+        <div className="mt-5 flex items-center gap-4 text-[15px]">
           <button
             onClick={handleLike}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-100 text-gray-700"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-700 text-gray-300 transition-colors"
           >
-            👍 <span>{post.likes.length}</span>
+           Like 👍 <span>{post.likes.length}</span>
           </button>
           <button
             onClick={handleDislike}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-100 text-gray-700"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-700 text-gray-300 transition-colors"
           >
-            👎 <span>{post.dislikes.length}</span>
+           Dislike 👎 <span>{post.dislikes.length}</span>
           </button>
         </div>
 
@@ -366,7 +375,7 @@ const PostDetail = () => {
           <Avatar name={user?.username} imageUrl={user?.avatarUrl} />
           <div className="flex-1">
             <textarea
-              className="w-full border rounded-2xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full bg-gray-800 border border-gray-700 rounded-2xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
               rows={3}
               placeholder="Write a comment..."
               value={newComment}
@@ -375,7 +384,7 @@ const PostDetail = () => {
             <div className="mt-2">
               <button
                 onClick={handleComment}
-                className="bg-blue-500 text-white px-5 py-2 rounded-xl hover:bg-blue-600"
+                className="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition-colors"
               >
                 Submit
               </button>
@@ -385,7 +394,7 @@ const PostDetail = () => {
 
         {/* Comments */}
         <div className="mt-8">
-          <h2 className="text-lg font-semibold mb-3">Comments</h2>
+          <h2 className="text-lg font-semibold mb-3 text-gray-200">Comments</h2>
           {comments.length === 0 ? (
             <p className="text-gray-500 italic">No comments yet.</p>
           ) : (
@@ -407,7 +416,7 @@ const PostDetail = () => {
       {toast && (
         <div
           className={`fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg text-white transition-all ${
-            toast.type === "success" ? "bg-green-500" : "bg-red-500"
+            toast.type === "success" ? "bg-green-600" : "bg-red-600"
           }`}
         >
           {toast.message}
@@ -419,7 +428,7 @@ const PostDetail = () => {
         <div className="fixed bottom-6 right-6 bg-gray-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
           <span>{confirmToast.message}</span>
           <button
-            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+            className="bg-red-600 px-3 py-1 rounded hover:bg-red-700 transition-colors"
             onClick={() => {
               confirmToast.onConfirm();
               setConfirmToast(null);
@@ -428,7 +437,7 @@ const PostDetail = () => {
             Confirm
           </button>
           <button
-            className="bg-gray-500 px-3 py-1 rounded hover:bg-gray-600"
+            className="bg-gray-600 px-3 py-1 rounded hover:bg-gray-500 transition-colors"
             onClick={() => setConfirmToast(null)}
           >
             Cancel

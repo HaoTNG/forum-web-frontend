@@ -10,7 +10,8 @@ import ProfilePage from "../pages/ProfilePage";
 import UserManagement from "../pages/UserManagement.tsx";
 import SearchResults from "../pages/SearchResults.tsx";
 import UserProfile from "../pages/UserProfile.tsx";
-
+import Popular from "../pages/Popular.tsx";
+import TopicDetail from "../pages/TopicDetail.tsx";
 const AppRoutes = () => {
     return (
         <Router>
@@ -22,13 +23,13 @@ const AppRoutes = () => {
                     <Route path="post/:id" element={<PostDetail />} />
                     <Route path="create" element={<CreatePost />} />
                     <Route path="edit/:id" element={<EditPost />} />
-                    
+                    <Route path="topics/:topic" element={<TopicDetail/>}/>
                     
                     <Route path="user/me/edit" element={<ProfilePage />} />
                     <Route path="user/me" element={<UserProfile />} />
                     {/* Profile của user khác theo id */}
                     <Route path="user/:id" element={<UserProfile />} />
-                    
+                    <Route path="popular" element={<Popular />}/>
                     <Route path="modandadmin" element={<UserManagement />} />
                     <Route path="search" element={<SearchResults />} />
                 </Route>

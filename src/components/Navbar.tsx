@@ -3,15 +3,42 @@ import { logoutUser } from "../services/auth";
 import { useState } from "react";
 import { useAuth } from "../components/AuthContext";
 
+
+const Avatar = ({ name, imageUrl }: { name?: string; imageUrl?: string | null }) => {
+  if (imageUrl) {
+    return (
+      <img
+        src={imageUrl}
+        alt={name}
+        className="h-9 w-9 rounded-full object-cover"
+      />
+    );
+  }
+  const initial = (name?.trim()?.[0] || "?").toUpperCase();
+  return (
+    <div className="h-9 w-9 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-gray-700">
+      {initial}
+    </div>
+  );
+};
+
 const Navbar = () => {
-    const { user } = useAuth(); // lấy user từ context
+    const { user } = useAuth(); 
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
+    const [confirmLogout, setConfirmLogout] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
-    const handleLogout = () => {
-        logoutUser();
+    const handleLogout = async () => {
+        try {
+        await logoutUser();
+        setToast({ message: "Logged out successfully!", type: "success" });
         navigate("/");
-    };
+    } catch (err) {
+        setToast({ message: "Logout failed!", type: "error" });
+    }
+};
+
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,21 +107,54 @@ const Navbar = () => {
                             </Link>
                         </>
                     ) : (
-                        <span className="flex items-center ">
-                            <Link
-                                to="/user/me"
-                                className="px-4 py-2 rounded-md  hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
-                            >
-                                Profile
-                            </Link>
+                        <span className="flex items-center gap-2">
+    
+                            
                             <button
-                                className="cursor-pointer px-4 py-2 rounded-md  hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
-                                onClick={handleLogout}
+                                className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+                                onClick={() => setConfirmLogout(true)}
                             >
                                 Logout
                             </button>
+                            
+                            <Link
+                                to="/user/me"
+                                className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+                                >
+                                <Avatar name={user?.username} imageUrl={user?.avatarUrl} />
+                                <span>
+                                    {user?.username?.trim().length > 12
+                                    ? user?.username.trim().slice(0, 12) + "..."
+                                    : user?.username.trim()}
+                                </span>
+                            </Link>
+
+
                         </span>
+
                     )}
+
+                    {confirmLogout && (
+                        <div className="fixed top-16 right-4 bg-gray-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
+                            <span>Are you sure you want to logout?</span>
+                            <button
+                            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+                            onClick={() => {
+                                handleLogout();
+                                setConfirmLogout(false);
+                            }}
+                            >
+                            Confirm
+                            </button>
+                            <button
+                            className="bg-gray-500 px-3 py-1 rounded hover:bg-gray-600"
+                            onClick={() => setConfirmLogout(false)}
+                            >
+                            Cancel
+                            </button>
+                        </div>
+                        )}
+
                 </div>
             </div>
         </nav>

@@ -8,5 +8,5 @@ export const TOPICS = [
     "Photography", "Physics", "Podcasts", "Poetry", "Politics", "Programming", "Psychology", "Relationships", "Religion", "Robotics",
     "Science", "Self-Improvement", "Skateboarding", "Social Issues", "Space", "Spirituality", "Sports", "Startups", "Technology", "Theater",
     "Travel", "TV Shows", "Urban Development", "UX/UI", "Video Editing", "Virtual Reality", "Volunteering", "Weather", "Web Development", "Wildlife",
-    "Wine", "Women’s Issues", "Writing", "Yoga", "Zoology", "Others"
+    "Wine", "Women’s Issues", "Writing", "Yoga", "Zoology", "Others", "Announcement", "Discussion", "News", "Knowledge"
 ];

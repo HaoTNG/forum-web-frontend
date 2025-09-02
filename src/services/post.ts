@@ -7,14 +7,20 @@ export interface Post {
     author: {
         _id: string;
         username: string;
+        avatarUrl: string;
     };
+    commentsCount: string;
+    likesCount: string;
+    comments: string[];
     likes: string[];
     dislikes: string[];
     images: string[];
+    createdAt: string;
+    
 }
 
 export const getPosts = async () => {
-    const res = await api.get("/post");
+    const res = await api.get("/posts/latest");
     return res.data;
 }
 
@@ -90,3 +96,28 @@ export const getPostByUser = async (id: string) =>{
     const res = await api.get(`/post/user/${id}`);
     return res.data;
 }
+
+export const getStats = async () =>{
+    const res = await api.get(`/stats`);
+    return res.data;
+}
+
+export const getPopularPosts = async (limit = 10, page = 1) => {
+  const res = await api.get(`/posts/popular?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getTopicStats = async () => {
+  const res = await api.get(`/posts/topic-stats`);
+  return res.data;
+};
+
+export const getPostsByTopic = async (topic: string) => {
+  const res = await api.get(`/posts/topic/${encodeURIComponent(topic)}`);
+  return res.data;
+};
+
+export const getFixedTopicStats = async () => {
+  const res = await api.get("posts/fixed-topic");
+  return res.data;
+};

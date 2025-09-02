@@ -36,7 +36,7 @@ export default function CreatePost() {
     <div className="max-w-5xl mx-auto mt-12">
       <div className="bg-white shadow-lg rounded-2xl p-8 border">
         <h2 className="text-3xl font-semibold mb-8 text-center text-gray-800">
-          Create New Post
+          Create New Thread
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -62,7 +62,7 @@ export default function CreatePost() {
             </label>
             <textarea
               className="w-full border rounded-lg px-3 py-2 h-32 resize-none focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              placeholder="Write your post content here..."
+              placeholder="Write your content here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required

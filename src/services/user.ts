@@ -30,6 +30,10 @@ export const getMe = async () => {
     return res.data;
 };
 
+export const getUser = async (id: string) => {
+  const res = await api.get(`/user/${id}`);
+  return res.data
+}
 
 export const updateMe = async (updateData: Record<string, any>) => {
     const res = await api.put("/user/me", updateData);
@@ -60,10 +64,11 @@ export const updateUserRole = async (id: string, role: string) => {
     return res.data;
 };
 
-export const getTopContributors = async () => {
-    const res = await api.get("/user/top-contributors");
-    return res.data;
+export const getTopContributors = async (): Promise<Contributor[]> => {
+  const res = await api.get("/user/top-contributors"); 
+  return res.data;
 }
+
 
 export const uploadAvatar = async (userId: string, file: File) =>{
   try {

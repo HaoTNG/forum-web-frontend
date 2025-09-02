@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { IUser } from "../services/user";
-import { getMe } from "../services/user";
+import { getMe, getUser } from "../services/user";
 import  type {Post} from "../services/post"; 
 import { getPostByUser } from "../services/post"; 
 
@@ -19,15 +19,15 @@ export default function UserProfile() {
         let data: IUser;
 
         if (id) {
-          const res = await fetch(`/api/users/${id}`);
-          data = await res.json();
+          data = await getUser(id);
+          
         } else {
           data = await getMe();
         }
 
         setUser(data);
 
-        // fetch posts của user
+        
         const postData = await getPostByUser(data._id);
         setPosts(postData);
       } catch (err) {
@@ -92,7 +92,7 @@ export default function UserProfile() {
 
       {/* Hàng dưới - Posts */}
       <div className="mt-8">
-        <h3 className="text-xl font-semibold mb-4">Posts</h3>
+        <h3 className="text-xl font-semibold mb-4 text-blue-500">Posts</h3>
         {posts.length === 0 ? (
           <p className="text-gray-500">No posts yet.</p>
         ) : (
@@ -103,8 +103,8 @@ export default function UserProfile() {
                 className="p-4 bg-white shadow rounded-xl hover:shadow-md transition cursor-pointer"
                 onClick={() => navigate(`/post/${post._id}`)}
               >
-                <h4 className="font-semibold text-lg">{post.title}</h4>
-                <p className="text-gray-600 text-sm mt-1 line-clamp-2">{post.content}</p>
+                <h4 className="font-semibold text-lg line-clamp-1 break-words">{post.title}</h4>
+                <p className="text-gray-600 text-sm mt-1 line-clamp-2 break-words">{post.content}</p>
               </div>
             ))}
           </div>
