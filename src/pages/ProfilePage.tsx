@@ -10,7 +10,7 @@ export default function ProfilePage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [description, setDescription] = useState("");
-    const [avatar, setAvatar] = useState<File | null>(null);
+    const [_avatar, setAvatar] = useState<File | null>(null);
 
     const [isChecking, setIsChecking] = useState(false);
     const [isAvailable, setIsAvailable] = useState(true);

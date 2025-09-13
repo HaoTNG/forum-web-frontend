@@ -1,28 +1,28 @@
 import {loginUser} from "../services/auth.ts";
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+//import {useNavigate} from "react-router-dom";
 
 const Login = () =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [success, setSuccess] = useState(false);
-    const navigate = useNavigate();
+   // const [success, setSuccess] = useState(false);
+   // const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try{
-            const data = await loginUser(email, password);
+            await loginUser(email, password);
             window.location.href = "/";
         }catch{
             alert("login failed");
         }
     }
 
-    if(success){
-
-
-
-    }
+   // if(success){
+//
+//
+//
+  //  }
     return(
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded">
             <h2 className="text-2xl font-bold mb-4">Login</h2>

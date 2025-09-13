@@ -125,7 +125,7 @@ const CommentItem = ({
           )}
         </div>
 
-        {comment.replies?.length > 0 && (
+        {comment.replies && comment.replies.length > 0 && (
           <div className="mt-3 ml-10 space-y-3">
             {comment.replies?.map((r) => (
               <CommentItem

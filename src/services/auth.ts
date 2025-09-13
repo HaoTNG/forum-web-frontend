@@ -30,5 +30,7 @@ export const registerUser = async (
 
 export const logoutUser = async () => {
   await api.post("/auth/logout", {}, { withCredentials: true });
-  window.location.replace("/home");
+  window.location.reload();
+
+  //window.location.replace("/home");
 };

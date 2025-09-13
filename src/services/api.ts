@@ -1,7 +1,9 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, withCredentials: true,
+  baseURL: import.meta.env.VITE_API_BASE_URL, 
+  withCredentials: true,
   headers: { "Content-Type": "application/json" }
 });
 
@@ -12,13 +14,15 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Nếu lỗi 401 từ login/register/refresh thì bỏ qua
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !["/auth/login", "/auth/register", "/auth/refresh"].some((url) =>
+        originalRequest.url?.includes(url)
+      )
+    ) {
       originalRequest._retry = true;
-
-      
-      if (window.location.pathname === "/login") {
-        return Promise.reject(error);
-      }
 
       try {
         await axios.post(
@@ -27,8 +31,11 @@ api.interceptors.response.use(
           { withCredentials: true }
         );
         return api(originalRequest);
-      } catch (refreshError) {
-        window.location.href = "/login";
+      } catch (refreshError: any) {
+        if (refreshError.response?.data?.message === "missing refresh token") {
+          return Promise.reject(refreshError);
+        }
+        // window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
@@ -36,6 +43,7 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 
 export default api;

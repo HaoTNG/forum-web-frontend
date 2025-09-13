@@ -6,6 +6,7 @@ import {type Contributor, getTopContributors} from "../services/user.ts";
 import ForumIndex from "./ForumIndex.tsx";
 import MainCategories from "./MainCategories.tsx";
 import UserInfoBox from "./UserInfoBox.tsx";
+import heroImg from "../assets/wp.jpg";
 const Home = () => {
     const [posts, setPosts] = useState<Post[]>([]);
 
@@ -189,9 +190,9 @@ const  StatsBox = () => {
             <div className="relative w-full h-[550px] ">
 
                 <img
-                    src="src/assets/wp.jpg"
-                    alt="Hero"
-                    className="w-full h-full object-cover"
+                  src={heroImg}
+                  alt="Hero"
+                  className="w-full h-full object-cover"
                 />
 
 

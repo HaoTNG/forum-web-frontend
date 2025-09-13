@@ -27,7 +27,7 @@ const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
     const [confirmLogout, setConfirmLogout] = useState(false);
-    const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+    const [_toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
     const handleLogout = async () => {
         try {
@@ -49,7 +49,7 @@ const Navbar = () => {
     };
 
     const loggedIn = !!user;
-    const role = user?.role;
+  //  const role = user?.role;
 
     return (
         <nav className="sticky top-0 z-50 bg-[#122640] text-white p-2.5 shadow-md ">
@@ -123,10 +123,13 @@ const Navbar = () => {
                                 >
                                 <Avatar name={user?.username} imageUrl={user?.avatarUrl} />
                                 <span>
-                                    {user?.username?.trim().length > 12
-                                    ? user?.username.trim().slice(0, 12) + "..."
-                                    : user?.username.trim()}
+                                {user?.username?.trim()
+                                    ? user.username.trim().length > 12
+                                    ? user.username.trim().slice(0, 12) + "..."
+                                    : user.username.trim()
+                                    : ""}
                                 </span>
+
                             </Link>
 
 
