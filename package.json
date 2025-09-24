@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && sudo cp -r ~/apps/forum-web-frontend/dist/* /var/www/forum-fe/",
     "lint": "eslint .",
     "preview": "vite preview"
   },

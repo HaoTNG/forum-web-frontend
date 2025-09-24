@@ -12,7 +12,7 @@ const Login = () =>{
         e.preventDefault();
         try{
             await loginUser(email, password);
-            window.location.href = "/";
+           window.location.href = "/";
         }catch{
             alert("login failed");
         }
