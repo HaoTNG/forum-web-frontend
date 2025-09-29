@@ -3,15 +3,27 @@ import { Link } from "react-router-dom";
 import { getMe } from "../services/user.ts"; // giả sử bạn có hàm này
 import type { IUser } from "../services/user.ts";
 import { useNavigate } from "react-router-dom";
-
+import { getFollowersCount, getFollowingCount} from "../services/follow";
 const UserInfoBox = () => {
   const [user, setUser] = useState<IUser | null>(null);
+  const [followersCount, setFollowersCount] = useState<number>(0);
+  const [followingCount, setFollowingCount] = useState<number>(0);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const data = await getMe();
         setUser(data);
+        const [followersRes, followingRes] = await Promise.allSettled([
+          getFollowersCount(data._id),
+          getFollowingCount(data._id),
+        ]);
+        if (followersRes.status === "fulfilled") {
+          setFollowersCount(followersRes.value.followersCount ?? 0);
+        }
+        if (followingRes.status === "fulfilled") {
+          setFollowingCount(followingRes.value.followingCount ?? 0);
+        }
       } catch (err) {
         console.error(err);
       }
@@ -41,6 +53,14 @@ const UserInfoBox = () => {
       </div>
 
       <ul className="grid gap-2 text-sm text-gray-200">
+        <li className="grid grid-cols-[1fr_auto]">
+          <span>Followers</span>
+          <span className="font-medium">{followersCount}</span>
+        </li>
+        <li className="grid grid-cols-[1fr_auto]">
+          <span>Following</span>
+          <span className="font-medium">{followingCount}</span>
+        </li>
         <li className="grid grid-cols-[1fr_auto]">
           <span>Posts</span>
           <span className="font-medium">{user.posts.length}</span>

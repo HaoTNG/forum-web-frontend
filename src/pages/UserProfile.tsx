@@ -1,35 +1,85 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { IUser } from "../services/user";
-import { getMe, getUser } from "../services/user";
-import  type {Post} from "../services/post"; 
-import { getPostByUser } from "../services/post"; 
+import {
+  getMe,
+  getUser,
+} from "../services/user";
+
+import { followUser, unfollowUser, getFollowersCount, getFollowingCount, isFollowing } from "../services/follow";
+import type { Post } from "../services/post";
+import { getPostByUser } from "../services/post";
 
 export default function UserProfile() {
-  const { id } = useParams();
+  const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
 
   const [user, setUser] = useState<IUser | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // follow-related state
+  const [followersCount, setFollowersCount] = useState<number>(0);
+  const [followingCount, setFollowingCount] = useState<number>(0);
+  const [isFollowingState, setIsFollowingState] = useState<boolean>(false);
+  const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
+
+  // current logged-in user
+  const [me, setMe] = useState<IUser | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        let data: IUser;
+        // try to get current user (may fail if not logged in)
+        let currentUser: IUser | null = null;
+        try {
+          currentUser = await getMe();
+        } catch (err) {
+          currentUser = null;
+        }
+        setMe(currentUser);
 
+        // profile to show (if id given show that user, else show me)
+        let profileUser: IUser;
         if (id) {
-          data = await getUser(id);
-          
+          profileUser = await getUser(id);
         } else {
-          data = await getMe();
+          if (!currentUser) {
+            navigate("/login");
+            return;
+          }
+          profileUser = currentUser;
+        }
+        setUser(profileUser);
+
+        // posts by that user
+        const postData = await getPostByUser(profileUser._id);
+        setPosts(postData);
+
+        // load follower/following counts (parallel)
+        const [followersRes, followingRes] = await Promise.allSettled([
+          getFollowersCount(profileUser._id),
+          getFollowingCount(profileUser._id),
+        ]);
+        if (followersRes.status === "fulfilled") {
+          setFollowersCount(followersRes.value.followersCount ?? 0);
+        }
+        if (followingRes.status === "fulfilled") {
+          setFollowingCount(followingRes.value.followingCount ?? 0);
         }
 
-        setUser(data);
-
-        
-        const postData = await getPostByUser(data._id);
-        setPosts(postData);
+        // check if current user follows this profile (only relevant when viewing other's profile)
+        if (currentUser && currentUser._id !== profileUser._id) {
+          try {
+            const status = await isFollowing(profileUser._id);
+            setIsFollowingState(!!status.isFollowing);
+          } catch {
+            setIsFollowingState(false);
+          }
+        } else {
+          setIsFollowingState(false);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -38,16 +88,52 @@ export default function UserProfile() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, navigate]);
+
+  const handleFollow = async () => {
+    if (!me) {
+      navigate("/login");
+      return;
+    }
+    if (!user) return <p className="text-center mt-10">User not found</p>;
+    setLoadingFollow(true);
+    try {
+      await followUser(user._id);
+      setIsFollowingState(true);
+      setFollowersCount((v) => v + 1);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingFollow(false);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    if (!me) {
+      navigate("/login");
+      return;
+    }
+    if (!user) return;
+    setLoadingFollow(true);
+    try {
+      await unfollowUser(user._id);
+      setIsFollowingState(false);
+      setFollowersCount((v) => Math.max(0, v - 1));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingFollow(false);
+    }
+  };
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (!user) return <p className="text-center mt-10">User not found</p>;
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
-      {/* Hàng trên */}
+      {/* Top card */}
       <div className="bg-white shadow-lg rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Bên trái */}
+        {/* Left */}
         <div className="flex flex-col items-center md:items-start gap-3">
           <img
             src={user.avatarUrl || "/default-avatar.png"}
@@ -57,11 +143,47 @@ export default function UserProfile() {
           <h2 className="text-2xl font-semibold">{user.username}</h2>
         </div>
 
-        {/* Bên phải */}
+        {/* Right */}
         <div className="flex flex-col gap-4">
           <p className="text-gray-700">{user.description || "No description yet."}</p>
 
-          <div className="grid grid-cols-3 gap-6 text-center md:text-left">
+          <div className="flex items-center gap-4">
+            <div className="flex gap-6">
+              <div className="text-center">
+                <p className="text-lg font-bold">{followersCount}</p>
+                <p className="text-sm text-gray-500">Followers</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-bold">{followingCount}</p>
+                <p className="text-sm text-gray-500">Following</p>
+              </div>
+            </div>
+
+            {/* Follow / Unfollow button (only shown when viewing another user and logged in) */}
+            {me && me._id !== user._id && (
+              <div className="ml-auto">
+                {isFollowingState ? (
+                  <button
+                    onClick={handleUnfollow}
+                    disabled={loadingFollow}
+                    className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-xl"
+                  >
+                    {loadingFollow ? "..." : "Unfollow"}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleFollow}
+                    disabled={loadingFollow}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl"
+                  >
+                    {loadingFollow ? "..." : "Follow"}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-3 gap-6 text-center md:text-left mt-4">
             <div>
               <p className="text-lg font-bold">{user.posts.length}</p>
               <p className="text-sm text-gray-500">Posts</p>
@@ -78,8 +200,8 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* Nút Edit (chỉ mình mới thấy) */}
-      {!id && (
+      {/* Edit button if viewing own profile */}
+      {me && user && me._id === user._id && (
         <div className="text-right mt-4">
           <button
             onClick={() => navigate("/user/me/edit")}
@@ -90,7 +212,8 @@ export default function UserProfile() {
         </div>
       )}
 
-      {/* Hàng dưới - Posts */}
+
+      {/* Posts */}
       <div className="mt-8">
         <h3 className="text-xl font-semibold mb-4 text-blue-500">Posts</h3>
         {posts.length === 0 ? (
