@@ -12,6 +12,8 @@ import SearchResults from "../pages/SearchResults.tsx";
 import UserProfile from "../pages/UserProfile.tsx";
 import Popular from "../pages/Popular.tsx";
 import TopicDetail from "../pages/TopicDetail.tsx";
+import CreateGroup from "../pages/CreateGroup.tsx";
+import GroupDetail from "../pages/GroupDetail.tsx";
 const AppRoutes = () => {
     return (
         <Router>
@@ -32,6 +34,8 @@ const AppRoutes = () => {
                     <Route path="popular" element={<Popular />}/>
                     <Route path="modandadmin" element={<UserManagement />} />
                     <Route path="search" element={<SearchResults />} />
+                    <Route path="createGroup" element={<CreateGroup />} />
+                    <Route path="group/:id" element={<GroupDetail />} />
                 </Route>
             </Routes>
         </Router>
