@@ -210,16 +210,23 @@ const  StatsBox = () => {
                     <div className="flex flex-col gap-4">
                         <Link
                             to="/create"
-                            className="flex items-center justify-center bg-transparent border-3 text-4xl border-black text-black font-bold px-4 py-2 rounded-2xl w-[400px] h-[100px] hover:bg-[#336bb0] hover:text-white hover:border-[#336bb0] transition mb-[24px] "
+                            className="flex items-center justify-center bg-transparent border-3 text-4xl border-black text-black font-bold px-4 py-2 rounded-2xl w-[500px] h-[100px] hover:bg-[#336bb0] hover:text-white hover:border-[#336bb0] transition "
                         >
                             Create Thread
                         </Link>
                         <Link
+                            to="/createGroup"
+                            className="flex items-center justify-center bg-transparent border-3 text-4xl border-black text-black font-bold px-4 py-2 rounded-2xl w-[500px] h-[100px] hover:bg-[#336bb0] hover:text-white hover:[#336bb0] transition "
+                        >
+                            Make your community
+                        </Link>
+                        <Link
                             to="/trending"
-                            className="flex items-center justify-center bg-transparent border-3 text-4xl border-black text-black font-bold px-4 py-2 rounded-2xl w-[400px] h-[100px] hover:bg-[#336bb0] hover:text-white hover:[#336bb0] transition "
+                            className="flex items-center justify-center bg-transparent border-3 text-4xl border-black text-black font-bold px-4 py-2 rounded-2xl w-[500px] h-[100px] hover:bg-[#336bb0] hover:text-white hover:[#336bb0] transition "
                         >
                             Trending Contents
                         </Link>
+                        
                     </div>
 
                 </div>

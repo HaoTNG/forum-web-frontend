@@ -412,38 +412,45 @@ const PostDetail = () => {
         </div>
       </div>
 
-      {/* Toast */}
-      {toast && (
+    {/* Toast (center, no overlay) */}
+    {toast && (
+      <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
         <div
-          className={`fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg text-white transition-all ${
+          className={`px-6 py-4 rounded-xl shadow-lg text-white text-lg pointer-events-auto ${
             toast.type === "success" ? "bg-green-600" : "bg-red-600"
           }`}
         >
           {toast.message}
         </div>
-      )}
+      </div>
+    )}
 
-      {/* Confirm Toast */}
-      {confirmToast && (
-        <div className="fixed bottom-6 right-6 bg-gray-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
-          <span>{confirmToast.message}</span>
-          <button
-            className="bg-red-600 px-3 py-1 rounded hover:bg-red-700 transition-colors"
-            onClick={() => {
-              confirmToast.onConfirm();
-              setConfirmToast(null);
-            }}
-          >
-            Confirm
-          </button>
-          <button
-            className="bg-gray-600 px-3 py-1 rounded hover:bg-gray-500 transition-colors"
-            onClick={() => setConfirmToast(null)}
-          >
-            Cancel
-          </button>
+    {/* Confirm Toast (center, no overlay) */}
+    {confirmToast && (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="bg-gray-800 text-white px-6 py-5 rounded-xl shadow-xl w-[400px] text-center">
+          <span className="block mb-4">{confirmToast.message}</span>
+          <div className="flex justify-center gap-4">
+            <button
+              className="bg-green-600 px-4 py-2 rounded hover:bg-green-700 transition-colors"
+              onClick={() => {
+                confirmToast.onConfirm();
+                setConfirmToast(null);
+              }}
+            >
+              Confirm
+            </button>
+            <button
+              className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-500 transition-colors"
+              onClick={() => setConfirmToast(null)}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-      )}
+      </div>
+    )}
+
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { IUser } from "../services/user";
+import { fetchGroupsByUserId, type Group } from "../services/group";
 import {
   getMe,
   getUser,
@@ -17,6 +18,8 @@ export default function UserProfile() {
   const [user, setUser] = useState<IUser | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [groups, setGroups] = useState<Group[]>([]);
 
   // follow-related state
   const [followersCount, setFollowersCount] = useState<number>(0);
@@ -52,6 +55,14 @@ export default function UserProfile() {
           profileUser = currentUser;
         }
         setUser(profileUser);
+
+        try{
+          const groupsData = await fetchGroupsByUserId(profileUser._id);
+          setGroups(groupsData);
+        }catch(err: any){
+          console.log("failed to fetch groups", err);
+          setGroups([]);
+        }
 
         // posts by that user
         const postData = await getPostByUser(profileUser._id);
@@ -131,6 +142,22 @@ export default function UserProfile() {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
+
+        <div className="relative w-full h-56 md:h-64 rounded-2xl overflow-hidden shadow-lg">
+        <img
+          src={user.bannerUrl || "/default-banner.png"}
+          alt="User banner"
+          className="w-full h-full object-cover"
+        />
+        {/* đặt avatar đè lên banner luôn cho đẹp */}
+        <div className="absolute -bottom-14 left-6">
+          <img
+            src={user.avatarUrl || "/default-avatar.png"}
+            alt={user.username}
+            className="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover"
+          />
+        </div>
+      </div>
       {/* Top card */}
       <div className="bg-white shadow-lg rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left */}
@@ -211,6 +238,22 @@ export default function UserProfile() {
           </button>
         </div>
       )}
+      <div className="mt-6">
+        <h3 className="text-xl font-semibold mb-4 text-blue-500">Groups</h3>
+        {groups.length === 0 ? (
+          <p className="text-gray-500">User is not in any group.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {groups.map((group) => (
+              <div key={group._id} className="p-4 bg-white shadow rounded-xl hover:shadow-md transition cursor-pointer">
+                <h4 className="font-semibold text-lg">{group.name}</h4>
+                <p className="text-gray-600 text-sm mt-1 line-clamp-2">{group.description || "No description"}</p>
+                <p className="text-gray-500 text-sm mt-2">{group.memberCount} members</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
 
       {/* Posts */}

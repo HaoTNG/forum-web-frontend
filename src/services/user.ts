@@ -6,6 +6,7 @@ export interface IUser {
     email: string;
     name?: string;
     avatarUrl: string;
+    bannerUrl: string;
     role: 'user' | 'moderator' | 'admin';
     description: string;
     createdAt: string;
