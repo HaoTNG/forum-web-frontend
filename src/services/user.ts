@@ -89,6 +89,23 @@ export const uploadAvatar = async (userId: string, file: File) =>{
   }
 };
 
+export const uploadBanner = async (userId: string, file: File) =>{
+  try{
+    const formData = new FormData();
+    formData.append("banner", file);
+
+    const res= await api.post(`/user/banner/${userId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      withCredentials: true,
+    });
+  return res.data;
+  }catch(error: any){
+    throw error.response?.data || {message: "Upload banner failed"};
+  }
+}
+
 export const checkUsernameAvailable = async (username: string): Promise<boolean> => {
   if (!username.trim()) return false;
 

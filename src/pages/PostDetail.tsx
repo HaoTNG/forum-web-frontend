@@ -96,21 +96,21 @@ const CommentItem = ({
     setShowReplyBox(false);
   };
 
-  return (
-    <div className="flex gap-3 mb-4 ">
-      <Avatar name={comment.author?.username} imageUrl={comment.author?.avatarUrl} />
-      <div className="flex-1">
-        <div className="inline-block bg-gray-800 rounded-2xl px-4 py-3 max-w-full break-words" style={{ overflowWrap: "anywhere" }}>
-  <div className="flex items-center gap-2">
-    <span className="font-semibold text-gray-200">{authorName}</span>
-    <span className="text-xs text-gray-500">
-      {new Date(comment.createdAt).toLocaleString()}
-    </span>
-  </div>
-  <p className="mt-1 text-gray-300 break-words whitespace-pre-wrap" style={{ overflowWrap: "anywhere" }}>
-    {comment.content}
-  </p>
-</div>
+          return (
+            <div className="flex gap-3 mb-4 ">
+              <Avatar name={comment.author?.username} imageUrl={comment.author?.avatarUrl} />
+              <div className="flex-1">
+                <div className="inline-block bg-gray-800 rounded-2xl px-4 py-3 max-w-full break-words" style={{ overflowWrap: "anywhere" }}>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-gray-200">{authorName}</span>
+            <span className="text-xs text-gray-500">
+              {new Date(comment.createdAt).toLocaleString()}
+            </span>
+          </div>
+          <p className="mt-1 text-gray-300 break-words whitespace-pre-wrap" style={{ overflowWrap: "anywhere" }}>
+            {comment.content}
+          </p>
+        </div>
 
 
         <div className="mt-2 flex items-center gap-2">
@@ -211,7 +211,7 @@ const PostDetail = () => {
 
   useEffect(() => {
     if (!toast) return;
-    const timer = setTimeout(() => setToast(null), 2500);
+    const timer = setTimeout(() => setToast(null), 1500);
     return () => clearTimeout(timer);
   }, [toast]);
 

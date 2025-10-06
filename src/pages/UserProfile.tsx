@@ -143,30 +143,29 @@ export default function UserProfile() {
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
 
-        <div className="relative w-full h-56 md:h-64 rounded-2xl overflow-hidden shadow-lg">
+      {/* Banner */}
+      <div className="relative w-full h-56 md:h-64 rounded-2xl overflow-hidden shadow-lg">
         <img
           src={user.bannerUrl || "/default-banner.png"}
           alt="User banner"
           className="w-full h-full object-cover"
         />
-        {/* đặt avatar đè lên banner luôn cho đẹp */}
-        <div className="absolute -bottom-14 left-6">
-          <img
-            src={user.avatarUrl || "/default-avatar.png"}
-            alt={user.username}
-            className="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover"
-          />
-        </div>
       </div>
+
+      {/* Avatar đè giữa 2 phần */}
+      <div className="relative  -bottom-14 left-6">
+        <img
+          src={user.avatarUrl || "/default-avatar.png"}
+          alt={user.username}
+          className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover z-10"
+        />
+      </div>
+
       {/* Top card */}
       <div className="bg-white shadow-lg rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left */}
         <div className="flex flex-col items-center md:items-start gap-3">
-          <img
-            src={user.avatarUrl || "/default-avatar.png"}
-            alt={user.username}
-            className="w-28 h-28 rounded-full border shadow"
-          />
+          
           <h2 className="text-2xl font-semibold">{user.username}</h2>
         </div>
 
