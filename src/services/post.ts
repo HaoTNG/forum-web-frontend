@@ -11,6 +11,7 @@ export interface Post {
     };
     commentsCount: string;
     likesCount: string;
+    dislikesCount: string;
     comments: string[];
     likes: string[];
     dislikes: string[];

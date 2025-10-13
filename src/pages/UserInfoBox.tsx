@@ -63,11 +63,11 @@ const UserInfoBox = () => {
         </li>
         <li className="grid grid-cols-[1fr_auto]">
           <span>Posts</span>
-          <span className="font-medium">{user.posts.length}</span>
+          <span className="font-medium">{user.posts?.length}</span>
         </li>
         <li className="grid grid-cols-[1fr_auto]">
           <span>Comments</span>
-          <span className="font-medium">{user.comments.length}</span>
+          <span className="font-medium">{user.comments?.length}</span>
         </li>
         
       </ul>

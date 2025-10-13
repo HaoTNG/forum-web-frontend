@@ -370,6 +370,9 @@ const PostDetail = () => {
           </button>
         </div>
 
+
+
+
         {/* New comment */}
         <div className="mt-6 flex gap-3">
           <Avatar name={user?.username} imageUrl={user?.avatarUrl} />

@@ -8,7 +8,8 @@ import {
   checkUsernameAvailable,
 } from "../services/user.ts";
 import type { IUser } from "../services/user.ts";
-
+import { logoutUser } from "../services/auth";
+import { useNavigate } from "react-router-dom";
 export default function ProfilePage() {
   const [user, setUser] = useState<IUser | null>(null);
   const [name, setName] = useState("");
@@ -26,6 +27,17 @@ export default function ProfilePage() {
 
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [confirmToast, setConfirmToast] = useState<{ message: string; onConfirm: () => void; onCancel?: () => void; } | null>(null);
+  const navigate = useNavigate();
+  const [confirmLogout, setConfirmLogout] = useState(false);
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      setToast({ message: "Logged out successfully!", type: "success" });
+      navigate("/");
+    } catch (err) {
+      setToast({ message: "Logout failed!", type: "error" });
+    }
+  };
 
   useEffect(() => {
     getMe()
@@ -65,7 +77,7 @@ export default function ProfilePage() {
       setToast({ message: "Username is already taken!", type: "error" });
       return;
     }
-
+  
     setConfirmToast({
       message: "Save changes to your profile?",
       onConfirm: async () => {
@@ -286,9 +298,15 @@ export default function ProfilePage() {
           >
             Delete account
           </button>
+          <button
+                  className="px-4 py-2 rounded-md hover:bg-[#D82424] text-xs sm:text-sm md:text-base lg:text-lg"
+                  onClick={() => setConfirmLogout(true)}
+                >
+                  Logout
+          </button>
         </div>
       </div>
-
+      
       {/* Toast */}
       {toast && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -301,7 +319,26 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
-
+      {confirmLogout && (
+              <div className="fixed top-16 right-4 bg-gray-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
+                <span>Are you sure you want to logout?</span>
+                <button
+                  className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+                  onClick={() => {
+                    handleLogout();
+                    setConfirmLogout(false);
+                  }}
+                >
+                  Confirm
+                </button>
+                <button
+                  className="bg-gray-500 px-3 py-1 rounded hover:bg-gray-600"
+                  onClick={() => setConfirmLogout(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
       {/* Confirm Toast */}
       {confirmToast && (
         <div className="fixed inset-0 flex items-center justify-center z-50 ">

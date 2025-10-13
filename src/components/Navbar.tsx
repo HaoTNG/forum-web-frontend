@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { logoutUser } from "../services/auth";
 import { useState } from "react";
 import { useAuth } from "../components/AuthContext";
 
@@ -23,145 +22,144 @@ const Avatar = ({ name, imageUrl }: { name?: string; imageUrl?: string | null })
 };
 
 const Navbar = () => {
-    const { user } = useAuth(); 
-    const [searchTerm, setSearchTerm] = useState("");
-    const navigate = useNavigate();
-    const [confirmLogout, setConfirmLogout] = useState(false);
-    const [_toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
-    const handleLogout = async () => {
-        try {
-        await logoutUser();
-        setToast({ message: "Logged out successfully!", type: "success" });
-        navigate("/");
-    } catch (err) {
-        setToast({ message: "Logout failed!", type: "error" });
+
+
+
+  
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm("");
     }
-};
+  };
+
+  const loggedIn = !!user;
+
+  return (
+    <>
+      {/* NAVBAR CHÍNH */}
+      <nav className="sticky top-0 z-50 bg-[#122640] text-white p-1 shadow-md">
+        
+        <div className="flex justify-around items-center ">
+          {/* Logo */}
+          <Link
+            to="/"
+            className="flex items-center text-base sm:text-xl md:text-2xl lg:text-3xl font-bold"
+          >
+            <span>Zforum</span>
+          </Link>
+
+          {/* Search */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex items-center justify-center w-full max-w-[800px]"
+            >
+            {/* Input chỉ hiện khi md trở lên */}
+            <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="hidden md:flex flex-grow h-10 px-4 text-sm text-black bg-white border border-gray-300 rounded-l-full focus:outline-none focus:border-blue-500"
+            />
+
+            {/* Icon luôn hiện */}
+            <button
+                type="submit"
+                className="h-10 w-10 flex items-center justify-center bg-gray-100 border border-gray-300 rounded-full md:rounded-r-full md:rounded-l-none hover:bg-gray-200"
+            >
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                className="text-gray-600"
+                >
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg>
+            </button>
+        </form>
 
 
-    const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchTerm.trim()) {
-            navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-            setSearchTerm("");
-        }
-    };
+          {/* Menu phải */}
+          <div className="flex items-center">
+            {loggedIn && (
+              <Link
+                to="/notifications"
+                className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+              >
+                Notifications
+              </Link>
+            )}
 
-    const loggedIn = !!user;
-  //  const role = user?.role;
+            {loggedIn && (
+              <Link
+                to="/chat"
+                className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+              >
+                Chat
+              </Link>
+            )}
+            {loggedIn && (
+              <Link
+                to="/group"
+                className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+              >
+                Groups
+              </Link>
+            )}
+            
 
-    return (
-        <nav className="sticky top-0 z-50 bg-[#122640] text-white p-2.5 shadow-md ">
-            <div className=" flex justify-around items-center">
-                <Link to="/" className="flex items-center text-base sm:text-lg md:text-xl lg:text-2xl font-bold">
-                    <span>Zforum</span>
+            {!loggedIn ? (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+                >
+                  Login
                 </Link>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <span className="flex items-center gap-2">
+                
 
-                <form onSubmit={handleSearchSubmit} className="flex items-center w-full max-w-[800px]">
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="flex-grow h-10 px-4 text-sm text-black bg-white border border-gray-300 rounded-l-full focus:outline-none focus:border-blue-500"
-                    />
-                    <button
-                        type="submit"
-                        className="h-10 w-12 flex items-center justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r-full hover:bg-gray-200"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" className="text-gray-600">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                        </svg>
-                    </button>
-                </form>
+                <Link
+                  to="/user/me"
+                  className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
+                >
+                  <Avatar name={user?.username} imageUrl={user?.avatarUrl} />
+                  <span>
+                    {user?.username?.trim()
+                      ? user.username.trim().length > 12
+                        ? user.username.trim().slice(0, 12) + "..."
+                        : user.username.trim()
+                      : ""}
+                  </span>
+                </Link>
+              </span>
+            )}
 
-                <div className="flex items-center">
-                    <Link to="/" className="px-4 py-2 rounded-md h-full hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg">
-                        Home
-                    </Link>
+            
+          </div>
+        </div>
+        
+      </nav>
 
-                    {/* chỉ hiện khi user có role phù hợp */}
-                    {loggedIn  && (
-                        <Link
-                            to="/modandadmin"
-                            className="px-4 py-2 rounded-md  hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
-                        >
-                            Management
-                        </Link>
-                    )}
-
-                    {!loggedIn ? (
-                        <>
-                            <Link
-                                to="/login"
-                                className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
-                            >
-                                Login
-                            </Link>
-                            <Link
-                                to="/register"
-                                className="px-4 py-2 rounded-md  hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg "
-                            >
-                                Register
-                            </Link>
-                        </>
-                    ) : (
-                        <span className="flex items-center gap-2">
-    
-                            
-                            <button
-                                className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
-                                onClick={() => setConfirmLogout(true)}
-                            >
-                                Logout
-                            </button>
-                            
-                            <Link
-                                to="/user/me"
-                                className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
-                                >
-                                <Avatar name={user?.username} imageUrl={user?.avatarUrl} />
-                                <span>
-                                {user?.username?.trim()
-                                    ? user.username.trim().length > 12
-                                    ? user.username.trim().slice(0, 12) + "..."
-                                    : user.username.trim()
-                                    : ""}
-                                </span>
-
-                            </Link>
-
-
-                        </span>
-
-                    )}
-
-                    {confirmLogout && (
-                        <div className="fixed top-16 right-4 bg-gray-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
-                            <span>Are you sure you want to logout?</span>
-                            <button
-                            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
-                            onClick={() => {
-                                handleLogout();
-                                setConfirmLogout(false);
-                            }}
-                            >
-                            Confirm
-                            </button>
-                            <button
-                            className="bg-gray-500 px-3 py-1 rounded hover:bg-gray-600"
-                            onClick={() => setConfirmLogout(false)}
-                            >
-                            Cancel
-                            </button>
-                        </div>
-                        )}
-
-                </div>
-            </div>
-        </nav>
-    );
+    </>
+  );
 };
 
 export default Navbar;
