@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import type { Post } from "../services/post";
 import { likePost, dislikePost } from "../services/post";
 import { useState } from "react";
+import { ThumbsUp, ThumbsDown, MessageSquareText } from "lucide-react";
 
 const PostCard = ({ post }: { post: Post }) => {
   const localPost = post;
+
   const [likesCount, setLikesCount] = useState(localPost.likesCount || 0);
   const [dislikesCount, setDislikesCount] = useState(localPost.dislikesCount || 0);  
-
+  const commentsCount = localPost.commentsCount || 0;
     const handleLike = async () => {
       if (!post) return;
       const res = await likePost(post._id);
@@ -29,7 +31,7 @@ const PostCard = ({ post }: { post: Post }) => {
     <div className="bg-gray-900 p-6 rounded-2xl shadow-md border border-gray-800 mb-6 hover:bg-gray-850 transition-colors">
       
       {/* Author */}
-      <Link to={author._id ? `/user/${author._id}` : "#"} className="flex items-center gap-2 hover:underline">
+      <Link to={author._id ? `/user/${author._id}` : "#"} className="inline-flex items-center gap-2 hover:underline">
         <img
           src={author.avatarUrl || "/default-avatar.png"}
           alt={author.username}
@@ -61,6 +63,7 @@ const PostCard = ({ post }: { post: Post }) => {
               key={i}
               src={img}
               alt={`post-${i}`}
+              onClick={() => window.open(`/post/${localPost._id}`, "_blank")}
               className="rounded-xl shadow-sm object-contain max-h-[600px]"
             />
           ))}
@@ -73,13 +76,20 @@ const PostCard = ({ post }: { post: Post }) => {
           onClick={handleLike}
           className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-700 transition-colors"
         >
-          👍 Like <span>{likesCount}</span>
+          <ThumbsUp /> Like <span>{likesCount}</span>
         </button>
         <button
           onClick={handleDislike}
           className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-700 transition-colors"
         >
-          👎 Dislike <span>{dislikesCount}</span>
+          <ThumbsDown /> Dislike <span>{dislikesCount}</span>
+        </button>
+
+        <button
+          onClick={() => window.open(`/post/${localPost._id}`, "_blank")}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-700 transition-colors"
+        >
+          <MessageSquareText /> Comments <span>{commentsCount}</span>
         </button>
       </div>
     </div>

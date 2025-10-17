@@ -4,6 +4,7 @@ import { getMe } from "../services/user.ts"; // giả sử bạn có hàm này
 import type { IUser } from "../services/user.ts";
 import { useNavigate } from "react-router-dom";
 import { getFollowersCount, getFollowingCount} from "../services/follow";
+import { User } from "lucide-react";
 const UserInfoBox = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const [followersCount, setFollowersCount] = useState<number>(0);
@@ -35,7 +36,10 @@ const UserInfoBox = () => {
 
   return (
     <div className="p-4 border rounded shadow-sm bg-[#1d2129]">
-      <h2 className="text-lg font-semibold mb-3 text-blue-500">User Info</h2>
+      <h2 className="flex items-center text-lg font-semibold mb-3 text-blue-500 gap-4">
+        <User className="w-10 h-10" />
+        User Info
+      </h2> 
 
       <div className="flex items-center gap-3 mb-4">
         <img

@@ -130,16 +130,15 @@ const  StatsBox = () => {
                 </div>
 
                 {/* Right Column (20%) */}
-                <div className="col-span-3 space-y-6 ">
+                <div className="col-span-3 space-y-6 relative">
+                  
                     <div className="bg-[#1d2129] p-6 rounded-lg shadow ">
                         <h2 className="text-xl font-semibold mb-4 text-blue-500">Top Contributors</h2>
                         <TopContributors />
                     </div>
 
                     
-                    <StatsBox />
-                    <UserInfoBox/>
-
+                    
                   <div className="bg-[#1d2129] p-6 rounded-lg shadow">
                     <h2 className="text-xl font-semibold mb-3 text-yellow-400"> Announcement</h2>
                     <p className="text-gray-200 text-sm leading-relaxed">
@@ -149,7 +148,10 @@ const  StatsBox = () => {
                       Please engage respectfully and contribute to a positive, welcoming environment.
                     </p>
                   </div>
-
+                    <StatsBox />
+                    <div className="sticky top-20 space-y-6">
+                      <UserInfoBox/>
+                    </div>
                 </div>
 
             </section>

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../components/AuthContext";
+import { Bell, MessageCircle, PenLine } from "lucide-react";
 
 
 const Avatar = ({ name, imageUrl }: { name?: string; imageUrl?: string | null }) => {
@@ -95,7 +96,7 @@ const Navbar = () => {
                 to="/notifications"
                 className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
               >
-                Notifications
+               <Bell className="w-6 h-6" />
               </Link>
             )}
 
@@ -104,15 +105,15 @@ const Navbar = () => {
                 to="/chat"
                 className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
               >
-                Chat
+                <MessageCircle className="w-6 h-6" />
               </Link>
             )}
             {loggedIn && (
               <Link
-                to="/group"
+                to="/create"
                 className="px-4 py-2 rounded-md hover:bg-[#1c4980] text-xs sm:text-sm md:text-base lg:text-lg"
               >
-                Groups
+                Create <PenLine className="w-4 h-4 inline" />
               </Link>
             )}
             
